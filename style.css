@@ -1,0 +1,893 @@
+/* ==========================================================================
+   1. ОБЩИЕ СТИЛИ И ЗАДНИЙ ФОН (ФИКС СЛОЕВ ДЛЯ МОБИЛЬНЫХ)
+   ========================================================================== */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    /* Включаем аппаратное ускорение для всей страницы */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.video-background {
+    background-color: #1a1a1a;
+    /* Черная подложка, чтобы если слой и моргнет, то не белым */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1000;
+    overflow: hidden;
+    pointer-events: none;
+    /* Принудительно выносим видео в отдельный аппаратно-ускоряемый слой */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+#myVideo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    z-index: -1000;
+    /* Центрируем и добавляем аппаратный пинок для GPU */
+    -webkit-transform: translate(-50%, -50%) translate3d(0, 0, 0);
+    transform: translate(-50%, -50%) translate3d(0, 0, 0);
+}
+/* ==========================================================================
+   2. СВАДЕБНАЯ КАРТОЧКА (HEADER) И АНИМАЦИИ
+   ========================================================================== */
+.wedding-card {
+    text-align: center;
+    padding: 100px 20px;
+    background: transparent;
+}
+
+/* Наш новый свадебный бежевый: #D9C5B2 или #E3D4C4 */
+.subtitle,
+h1,
+.date {
+    opacity: 0;
+    color: #D9C5B2;
+    /* Элегантный бежевый */
+    /* Тень теперь тоже в теплых тонах, чтобы текст не выглядел грязным */
+    animation-fill-mode: forwards !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    font-size: 14px;
+    color: #ede7e1;
+    /* Чуть темнее для контраста */
+    animation: slideDown 1.5s ease-out 0.2s;
+}
+
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 10vw, 80px);
+    font-weight: 400;
+    font-style: italic;
+    margin: 20px 0;
+    /* Имена будут цвета "шампань" */
+    color: #E3D4C4;
+    animation: fadeInFocus 2.5s ease-in-out 0.7s;
+    white-space: nowrap;
+    /* Запрещает перенос строк внутри заголовка */
+    display: flex;
+    /* Включает гибкий контейнер */
+    justify-content: center;
+    /* Центрирует содержимое (если нужно) */
+    align-items: center;
+    /* Выравнивает элементы по вертикали */
+    gap: 10px;
+    /* Создает аккуратные отступы между именами и & */
+}
+
+h1 .divider {
+    color: #E3D4C4;
+    font-size: 28px;
+    font-style: italic;
+    margin: 0 10px;
+}
+
+.date {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    letter-spacing: 5px;
+    animation: slideUp 1.5s ease-out 1.5s;
+}
+
+/* --- АНИМАЦИИ --- */
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInFocus {
+    0% {
+        opacity: 0;
+        filter: blur(15px);
+        transform: scale(0.9);
+        color: #B2A290;
+        /* Начинаем с более темного */
+    }
+
+    100% {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1);
+        color: #E3D4C4;
+        /* Заканчиваем нежным светлым бежем */
+    }
+}
+
+/* ==========================================================================
+   3. ПРИГЛАШЕНИЕ И РАЗДЕЛИТЕЛИ
+   ========================================================================== */
+/* Текст пригласительного */
+.invitation {
+    font-family: 'Playfair Display', serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    padding: 20px 0;
+    color: #E3D4C4;
+    text-align: center;
+    font-size: 24px;
+    opacity: 0;
+    margin: 20px;
+    transform: translateY(30px);
+    transition: all 1.2s ease-out;
+    /* Плавность появления (1.2 секунды) */
+}
+
+.invitation.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.highlight {
+    font-family: "Great Vibes", cursive;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+/* Сердечко */
+.heart-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 40px auto;
+    max-width: 300px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s ease-out;
+}
+
+/* Когда JS добавит класс active, блок плавно появится */
+.heart-separator.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.heart-separator .heart {
+    padding: 0 15px;
+    color: #E3D4C4;
+    /* Цвет вашего текста */
+    font-size: 20px;
+    font-family: serif;
+    /* Заставляет iOS отображать сердце как текст, а не эмодзи */
+    display: inline-block;
+}
+
+.reveal {
+    opacity: 0;
+    /* Меняем обычный translateY на аппаратный translate3d */
+    -webkit-transform: translate3d(0, 50px, 0);
+    transform: translate3d(0, 50px, 0);
+    transition: all 1.2s ease-out;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.reveal.active {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+/* ==========================================================================
+   4. МЕСТО ПРОВЕДЕНИЯ (VENUE)
+   ========================================================================== */
+.venue {
+    padding: 0px 0px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.venue h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 42px;
+    color: #E3D4C4;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.venue-content {
+    max-width: 500px;
+    width: 90%;
+    margin: 0 auto;
+    background: #ffffff36;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.venue-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.venue-info {
+    padding: 35px 25px;
+}
+
+.venue-info h3 {
+    font-family: "Great Vibes", cursive;
+    font-size: 34px;
+    color: #E3D4C4;
+    margin: 0 0 10px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.address {
+    color: #E3D4C4;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ИСПРАВЛЕНО: Кнопка перекрашена из ярко-синего под благородный стиль сайта */
+.map-button {
+    display: inline-block;
+    padding: 14px 35px;
+    background-color: #E3D4C4;
+    color: #1a1a1a;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.map-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(227, 212, 196, 0.4);
+}
+
+/* ==========================================================================
+   5. ПЛАН ДНЯ (TIMELINE)
+   ========================================================================== */
+.timeline {
+    padding: 40px 20px 10px 20px;
+    /* Уменьшили нижний внутренний отступ */
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 10px auto;
+    /* ИСПРАВЛЕНО: убрали margin-bottom 80px */
+}
+
+.timeline h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 42px;
+    color: #E3D4C4;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.timeline-container {
+    position: relative;
+    padding-left: 40px;
+    text-align: left;
+}
+
+/* Вертикальная линия */
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, #E3D4C4, transparent);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+/* Точка на линии */
+.timeline-dot {
+    position: absolute;
+    left: -40px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    background-color: #E3D4C4;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(227, 212, 196, 0.5);
+    z-index: 2;
+}
+
+.timeline-time {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #E3D4C4;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+.timeline-content {
+    background: #ffffff36;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-content h3 {
+    font-family: "Great Vibes", cursive;
+    font-size: 28px;
+    color: #E3D4C4;
+    margin: 0 0 5px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   6. ДРЕСС-КОД (DRESS CODE) — СТАНДАРТНЫЙ ОТСТУП И ДЕСКТОПНАЯ ВЕРСИЯ
+   ========================================================================== */
+.dress-code.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1.2s ease-out;
+}
+
+.dress-code.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dress-code {
+    padding: 0 20px;
+    text-align: center;
+    max-width: 600px;
+    margin: 50px auto 0 auto;
+}
+
+.dress-code h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 42px;
+    color: #E3D4C4;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dress-code p {
+    font-family: 'Montserrat', sans-serif;
+    color: #E3D4C4;
+    font-size: 16px;
+    line-height: 1.5;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+}
+
+/* СТИЛИ ПАЛИТРЫ ДЛЯ КОМПЬЮТЕРОВ (ИСПРАВЛЕНО: кружки не прячутся, а красиво переносятся) */
+.color-slider {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    /* Центрирует всю палитру на экране ПК */
+    flex-wrap: wrap;
+    /* Позволяет кружкам переноситься на новые строки на десктопе */
+    padding: 20px 0;
+}
+
+.color-item {
+    flex: 0 0 auto;
+    /* Запрещает кружкам сжиматься или менять пропорции */
+    display: flex;
+    justify-content: center;
+}
+
+.color-item img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #E3D4C4;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    /* Добавляет плавность при наведении мыши */
+}
+
+/* Красивый интерактивный эффект при наведении курсора на ПК */
+.color-item img:hover {
+    transform: scale(1.1);
+}
+
+/* СТИЛИ ПАЛИТРЫ ДЛЯ МОБИЛЬНЫХ (ИСПРАВЛЕНО: возвращаем ваш компактный слайдер в одну линию) */
+@media (max-width: 768px) {
+    .color-slider {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        justify-content: flex-start;
+        /* Прижимает слайдер к левому краю для удобного скролла */
+        flex-wrap: nowrap;
+        /* Запрещает перенос кружков на новые строки на смартфонах */
+        scrollbar-width: none;
+        /* Скрывает полосу прокрутки в Firefox */
+    }
+
+    /* Скрывает полосу прокрутки в Chrome, Safari и Opera */
+    .color-slider::-webkit-scrollbar {
+        display: none;
+    }
+
+    .color-item {
+        flex: 0 0 calc(25% - 12px);
+        /* Возвращает ваши оригинальные размеры элементов */
+        scroll-snap-align: start;
+    }
+}
+
+@media (max-width: 480px) {
+    .color-item {
+        flex: 0 0 calc(30% - 10px);
+    }
+
+    .color-item img {
+        width: 65px;
+        height: 65px;
+    }
+}
+
+/* ==========================================================================
+   7. АДАПТИВНОСТЬ ДЛЯ СМАРТФОНОВ (MEDIA QUERIES)
+   ========================================================================== */
+/* На мобильных телефонах делаем кружки чуть меньше, чтобы их больше помещалось на экране */
+@media (max-width: 480px) {
+    .color-item {
+        flex: 0 0 calc(30% - 10px);
+    }
+
+    .color-item img {
+        width: 65px;
+        height: 65px;
+        /* Не забывайте указывать и высоту тоже */
+    }
+}
+
+/* ==========================================================================
+   8. ДЕТАЛИ ПРАЗДНИКА (DETAILS) — ИДЕНТИЧНЫЙ ОТСТУП
+   ========================================================================== */
+/* Анимация появления */
+.details.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1.2s ease-out;
+}
+
+.details.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.details {
+    padding: 0 20px;
+    text-align: center;
+    max-width: 600px;
+    margin: 50px auto 50px auto;
+    /* ИСПРАВЛЕНО: ровно 50px от дресс-кода сверху и 50px до конца страницы */
+}
+
+.details h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 42px;
+    color: #E3D4C4;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Фирменная матовая плашка */
+.details-content {
+    background: #ffffff36;
+    padding: 35px 25px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.details-text {
+    font-family: 'Montserrat', sans-serif;
+    color: #E3D4C4;
+    font-size: 16px;
+    line-height: 1.6;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 15px;
+}
+
+.details-text:last-child {
+    margin-bottom: 0;
+}
+
+.highlight-detail {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    border-top: 1px solid rgba(227, 212, 196, 0.3);
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .details-text {
+        font-size: 15px;
+    }
+
+    .highlight-detail {
+        font-size: 16px;
+    }
+}
+
+/* ==========================================================================
+   9. АНКЕТА ГОСТЯ (RSVP FORM)
+   ========================================================================== */
+.rsvp.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1.2s ease-out;
+}
+
+.rsvp.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.rsvp {
+    padding: 0 20px;
+    text-align: center;
+    max-width: 600px;
+    margin: 50px auto 80px auto;
+    /* Снизу делаем отступ побольше до конца экрана */
+}
+
+.rsvp h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 42px;
+    color: #E3D4C4;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Фирменная матовая плашка */
+.rsvp-form {
+    background: #ffffff36;
+    padding: 40px 30px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group:nth-last-child(2) {
+    margin-bottom: 35px;
+    /* Чуть больше отступ перед кнопкой */
+}
+
+.form-group label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    color: #E3D4C4;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+
+/* Стилизация текстовых полей ввода */
+.rsvp-form input[type="text"] {
+    width: 100%;
+    padding: 14px 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(227, 212, 196, 0.3);
+    border-radius: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    color: #ffffff;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.rsvp-form input[type="text"]:focus {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #E3D4C4;
+    box-shadow: 0 0 10px rgba(227, 212, 196, 0.2);
+}
+
+/* Стилизация плейсхолдеров (подсказок внутри полей) */
+.rsvp-form input::placeholder {
+    color: rgba(227, 212, 196, 0.6);
+}
+
+/* Радио-кнопки (Варианты ответа) */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 5px;
+}
+
+.radio-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    color: #E3D4C4;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: relative;
+    user-select: none;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Скрываем стандартный дефолтный кружок браузера */
+.radio-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Наш кастомный красивый кружок */
+.custom-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #E3D4C4;
+    border-radius: 50%;
+    margin-right: 12px;
+    display: inline-block;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+/* Точка внутри кружка при выборе */
+.custom-radio::after {
+    content: '';
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #E3D4C4;
+    transform: translate(-50%, -50%);
+}
+
+/* Показываем точку, когда выбран нужный вариант */
+.radio-label input:checked~.custom-radio::after {
+    display: block;
+}
+
+.radio-label input:checked~.custom-radio {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 8px rgba(227, 212, 196, 0.4);
+}
+
+/* Кнопка отправки формы */
+.submit-button {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    background-color: #E3D4C4;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.submit-button:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(227, 212, 196, 0.4);
+}
+
+/* Адаптивность для экранов мобильных телефонов */
+@media (max-width: 480px) {
+    .rsvp-form {
+        padding: 30px 20px;
+    }
+}
+
+/* Стили для контейнера, чтобы плашки плавно меняли друг друга */
+.rsvp-container {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Блок благодарности (изначально скрыт, матовый фон как у формы) */
+.rsvp-success {
+    display: none;
+    background: #ffffff36;
+    padding: 50px 30px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.6s ease-out;
+}
+
+/* Класс, который JS включит после успешной отправки */
+.rsvp-success.visible {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.success-title {
+    font-family: "Great Vibes", cursive;
+    font-size: 38px;
+    color: #E3D4C4;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.success-text {
+    font-family: 'Montserrat', sans-serif;
+    color: #E3D4C4;
+    font-size: 16px;
+    line-height: 1.6;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Класс для плавного скрытия анкеты перед удалением */
+.rsvp-form.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.4s ease-out;
+}
+
+/* ==========================================================================
+   10. СЧЕТЧИК ОБРАТНОГО ОТСЧЕТА (COUNTDOWN) — В КОНЦЕ СТРАНИЦЫ
+   ========================================================================== */
+.countdown-section.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1.2s ease-out;
+}
+
+.countdown-section.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.countdown-section {
+    padding: 0 20px;
+    text-align: center;
+    max-width: 600px;
+    margin: 50px auto 80px auto;
+    /* ИСПРАВЛЕНО: ровный отступ от анкеты и большой отступ снизу до края экрана */
+}
+
+.countdown-section h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 36px;
+    color: #E3D4C4;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Контейнер для блоков таймера */
+.countdown-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    background: #ffffff36;
+    /* Ваша фирменная матовая плашка */
+    padding: 25px 15px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+/* Крупные цифры */
+.countdown-number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: bold;
+    color: #E3D4C4;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+/* Подписи под цифрами */
+.countdown-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #E3D4C4;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Адаптивность */
+@media (max-width: 400px) {
+    .countdown-container {
+        padding: 20px 10px;
+        gap: 5px;
+    }
+
+    .countdown-label {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+}
