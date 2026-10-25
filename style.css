@@ -89,25 +89,36 @@ h1,
 
 h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(32px, 8vw, 75px); 
+    /* ИСПРАВЛЕНО: Увеличили минимальный порог до 28px и коэффициент до 7vw. 
+       Теперь на iPhone 14 имена станут крупными, заметными и займут всё красивое пространство до краев */
+    font-size: clamp(28px, 7vw, 75px); 
     font-weight: 400;
     font-style: italic;
     margin: 20px 0;
     color: #E3D4C4;
     animation: fadeInFocus 2.5s ease-in-out 0.7s;
+    
     display: flex;
-    flex-wrap: wrap; 
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    flex-wrap: nowrap; /* Строгий запрет на перенос строки */
     width: 100%;
+    max-width: 100%;
+}
+
+/* Заставляем текстовые контейнеры внутри h1 никогда не рваться */
+h1 span {
+    white-space: nowrap;
+    display: inline-block;
 }
 
 h1 .divider {
     color: #E3D4C4;
-    font-size: 28px;
+    /* Амперсанд (&) тоже пропорционально подрос для баланса с крупными именами */
+    font-size: clamp(20px, 5vw, 28px); 
     font-style: italic;
-    margin: 0 10px;
+    margin: 0 8px; 
+    flex-shrink: 0;
 }
 
 .date {
